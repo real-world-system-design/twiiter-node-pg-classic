@@ -1,7 +1,7 @@
 <h1 align="center">:dolphin:<tt>Chatter</tt>:dolphin:</h1>
 <blockquote align="center">Backend API for a social media application like twitter</blockquote>
 
-<p align="center"><a href="https://github.com/real-world-system-design/twiiter_node_pg"><img alt="Github actions status" src="https://github.com/real-world-system-design/twiiter_node_pg/actions/workflows/build.yml/badge.svg" /></a></p>
+<p align="center"><a href="https://github.com/real-world-system-design/twiiter_node_pg"><img alt="Github actions status" src="https://github.com/real-world-system-design/twiiter_node_pg/actions/workflows/build.yaml/badge.svg" /></a></p>
 
 ## Technologies used :
 * NodeJS     -- Platform
