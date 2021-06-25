@@ -1,0 +1,34 @@
+name: Docker
+
+on:
+  schedule:
+    - cron: '45 10 * * *'
+  push:
+    branches: [ main ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and push Docker image and publish to github packages
+        run: 
+         VERSION=$(date + %s) 
+         docker build . --filename Dockerfile --tag docker.pkg.github.com/real-world-system-design/twiiter_node_pg/app:${VERSION}
+         docker login docker.pkg.github.com --username Rahul-D78 --password ${{secrets.GITHUB_TOKEN}
+         docker push docker.pkg.github.com/real-world-system-design/twiiter_node_pg/app:${VERSION}
