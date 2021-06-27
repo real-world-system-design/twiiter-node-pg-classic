@@ -51,4 +51,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: docrahul/sample:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/chatter:latest
