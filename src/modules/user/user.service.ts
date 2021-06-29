@@ -4,6 +4,7 @@ import { User } from '../../entities/user.entity';
 import { createUserDto } from './dto/registerUser.dto';
 import { Repository } from 'typeorm';
 import { hashPass } from '../../utils/password';
+import { sanitization } from '../../utils/security';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,6 @@ export class UserService {
     newUSer.email = email;
     newUSer.password = await hashPass(password);
     const savedUser = await this.userRepo.save(newUSer);
-    return savedUser;
+    return sanitization(savedUser);
   }
 }
