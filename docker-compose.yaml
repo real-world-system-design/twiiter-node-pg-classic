@@ -1,10 +1,32 @@
 version: '3'
 services:
-  chatter-pg-nodejs:
-    container_name: chatter
+  nginx:
+    build: ./nginx
+    links:
+      - app1:app1
+      - app2:app2
+    ports:
+      - "80:80"
+
+  app1:
+    container_name: chatter1
     build: .
     ports:
       - 3000:3000
+    environment:
+      POSTGRES_HOST: twitter:twitter@postgres:5432
+      PORT: 3000
+
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+  app2:
+    container_name: chatter2
+    build: .
+    ports:
+      - 3001:3000
     environment:
       POSTGRES_HOST: twitter:twitter@postgres:5432
       PORT: 3000

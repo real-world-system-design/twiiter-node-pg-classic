@@ -8,7 +8,6 @@ WORKDIR /home/node
 COPY . /home/node
 
 RUN npm ci \
-    && npm install --save @nestjs/typeorm \
     && npm run build
 
 # ---
