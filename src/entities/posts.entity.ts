@@ -3,7 +3,7 @@ import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 
 @Entity('tweets')
-export abstract class Tweet extends BaseEntity {
+export class Tweet extends BaseEntity {
   @Column({ length: 50, nullable: false })
   title: string;
 
@@ -20,5 +20,5 @@ export abstract class Tweet extends BaseEntity {
   favoritesCount?: number;
 
   @ManyToOne(() => User)
-  author: User;
+  author?: User;
 }

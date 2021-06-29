@@ -1,9 +1,8 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { createUserDto } from './dto/registerUser.dto';
-import { getRepository, Repository } from 'typeorm';
-import { validate } from 'class-validator';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
