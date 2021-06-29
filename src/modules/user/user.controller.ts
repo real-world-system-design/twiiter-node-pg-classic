@@ -1,7 +1,20 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { User } from '../../entities/user.entity';
+import { createUserDto } from './dto/registerUser.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
   @Get('/@:username')
   getUserByUsername(@Param('username') username: string): string {
     return `details of username ${username}`;
@@ -12,9 +25,10 @@ export class UserController {
     return `user by id ${userid}`;
   }
 
-  @Post('/')
-  createNewUser(): string {
-    return 'new user created';
+  @Post('/register')
+  @HttpCode(201)
+  async registerNewUser(@Body() data: createUserDto): Promise<User> {
+    return await this.userService.registerUser(data);
   }
 
   @Patch('/:userid')
