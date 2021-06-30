@@ -1,7 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Tweet } from './entities/posts.entity';
-import { User } from './entities/user.entity';
-// import { join } from 'path';
+import { join } from 'path';
 
 export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
   return {
@@ -9,7 +7,7 @@ export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
     username: 'twitter',
     password: 'twitter',
     database: 'twitter',
-    entities: [User, Tweet],
+    entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     synchronize: true,
     logging: true,
     dropSchema: true,
