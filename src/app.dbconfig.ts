@@ -15,6 +15,18 @@ export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
   };
 }
 
+export function createTypeOrmTestConfig(): TypeOrmModuleOptions {
+  return {
+    type: 'sqlite',
+    database: ':memory:',
+    entities: ['src/entities/*.ts'],
+    synchronize: true,
+    dropSchema: true,
+    logging: true,
+    logger: 'advanced-console',
+  };
+}
+
 // url: `postgres://${process.env.POSTGRES_HOST}/${
 //   process.env.POSTGRES_DB || 'twitter'
 // }`

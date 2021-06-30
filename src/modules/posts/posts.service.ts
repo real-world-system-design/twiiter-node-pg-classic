@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Tweet } from 'src/entities/posts.entity';
+import { Tweet } from '../../entities/posts.entity';
 import { TweetData } from './dto/createTweet.dto';
 import { Repository } from 'typeorm';
 
