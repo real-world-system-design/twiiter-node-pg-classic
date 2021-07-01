@@ -9,6 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { Tweet } from '../../entities/posts.entity';
+import { User } from '../user/user.decorator';
 import { TweetData } from './dto/createTweet.dto';
 import { PostsService } from './posts.service';
 
@@ -28,9 +29,12 @@ export class PostsController {
   }
 
   @Post('/create')
-  async createPost(@Body() data: TweetData): Promise<Tweet> {
+  async createPost(
+    @Body() data: TweetData,
+    @User('email') email: string,
+  ): Promise<Tweet> {
     // TODO: user id we can get from jwt token
-    return await this.postService.createTweet(data);
+    return await this.postService.createTweet(data, email);
   }
 
   @Patch('/:postId')
