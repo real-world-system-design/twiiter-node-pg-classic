@@ -9,6 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
+import { LoginData } from './dto/loginUser.dto';
 import { createUserDto } from './dto/registerUser.dto';
 import { UserService } from './user.service';
 
@@ -29,6 +30,12 @@ export class UserController {
   @HttpCode(201)
   async registerNewUser(@Body() data: createUserDto): Promise<User> {
     return await this.userService.registerUser(data);
+  }
+
+  @Post('login')
+  @HttpCode(201)
+  async loginUser(@Body() data: LoginData): Promise<User> {
+    return await this.userService.loginUser(data);
   }
 
   @Patch('/:userid')
