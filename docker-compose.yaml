@@ -33,9 +33,13 @@ services:
 
     depends_on:
       - postgres
+      - redis
     links:
       - postgres
 
+  redis:
+    image: redis:alpine
+  
   postgres:
     container_name: postgres
     restart: always
