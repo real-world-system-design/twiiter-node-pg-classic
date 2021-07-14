@@ -4,21 +4,21 @@ import { User } from './user.entity';
 
 @Entity('tweets')
 export class Tweet extends BaseEntity {
-  @Column({ length: 50, nullable: false })
+  @Column({ nullable: true })
   title: string;
 
-  @Column({ length: 100, nullable: true })
-  description?: string;
+  @Column({ nullable: true })
+  description: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ nullable: true })
   body: string;
 
-  @Column({ type: 'text', nullable: true })
-  tagList?: string[];
+  @Column('json', { default: [], nullable: true })
+  tagList: Array<string>;
 
   @Column({ default: 0 })
-  favoritesCount?: number;
+  favoritesCount: number;
 
   @ManyToOne(() => User)
-  author?: User;
+  author: User;
 }

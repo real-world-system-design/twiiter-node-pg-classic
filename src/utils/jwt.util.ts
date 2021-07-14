@@ -11,7 +11,6 @@ export async function sign(user: User): Promise<string> {
       {
         id: user.id,
         email: user.email,
-        exp: exp.getTime() / 1000,
       },
       JWT_SECRET,
       (err: any, token: string) => {
