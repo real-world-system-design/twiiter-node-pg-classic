@@ -11,6 +11,7 @@ import {
 import { User } from '../../entities/user.entity';
 import { LoginData } from './dto/loginUser.dto';
 import { createUserDto } from './dto/registerUser.dto';
+import { updateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -39,8 +40,11 @@ export class UserController {
   }
 
   @Patch('/:userid')
-  updateUserDetails(@Param('userid') userid: string) {
-    return `initiate a update request for user ${userid}`;
+  async updateUserDetails(
+    @Body() data: updateUserDto,
+    @Param('userid') userid: string,
+  ) {
+    return await this.userService.updateUser(data, userid);
   }
 
   @Delete('/:userid')

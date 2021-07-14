@@ -8,6 +8,7 @@ import { sanitization } from '../../utils/security';
 import { validate } from 'class-validator';
 import { sign } from '../../utils/jwt.util';
 import { LoginData } from './dto/loginUser.dto';
+import { updateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -63,5 +64,29 @@ export class UserService {
       );
     user.token = await sign(user);
     return sanitization(user);
+  }
+
+  async updateUser(data: updateUserDto, userId: string): Promise<User> {
+    const user = await this.userRepo.findOne(userId);
+    if (!user)
+      throw new HttpException(
+        { message: `${data.email} not found` },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+
+    const errors = await validate(data);
+    if (errors.length > 0) {
+      const _errors = { username: 'UserInput is not valid' };
+      throw new HttpException(
+        { message: `Input data validation failed`, _errors },
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      if (data.email) user.email = data.email;
+      if (data.password) user.password = await hashPass(data.password);
+      if (data.username) user.username = data.username;
+      await this.userRepo.save(user);
+      return sanitization(user);
+    }
   }
 }
