@@ -54,8 +54,10 @@ export class PostsController {
   }
 
   @Delete('/:postId')
-  deletePost(@Param('postId') postId: string) {
-    // TODO: user id we can get from jwt token
-    return `initiate a patch request for ${postId}`;
+  async deleteTweet(
+    @Param('postId') postId: string,
+    @User('email') email: string,
+  ): Promise<void> {
+    await this.postService.deleteTweet(postId, email);
   }
 }

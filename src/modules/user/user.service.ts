@@ -89,4 +89,14 @@ export class UserService {
       return sanitization(user);
     }
   }
+
+  async deleteUser(userId: string): Promise<void> {
+    const user = await this.userRepo.findOne(userId);
+    if (!user)
+      throw new HttpException(
+        { message: 'user not found' },
+        HttpStatus.NOT_FOUND,
+      );
+    await this.userRepo.remove(user);
+  }
 }

@@ -81,4 +81,13 @@ export class PostsService {
 
     return await this.tweetRepo.save(toUpdate);
   }
+
+  public async deleteTweet(tweetId: string, userId: string): Promise<void> {
+    const tweet = await this.tweetRepo.findOne(tweetId);
+    const user = await this.userRepo.findOne(userId);
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    if (!tweet)
+      throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
+    await this.tweetRepo.remove(tweet);
+  }
 }

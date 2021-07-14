@@ -40,6 +40,7 @@ export class UserController {
   }
 
   @Patch('/:userid')
+  @HttpCode(201)
   async updateUserDetails(
     @Body() data: updateUserDto,
     @Param('userid') userid: string,
@@ -48,7 +49,8 @@ export class UserController {
   }
 
   @Delete('/:userid')
-  delteUserById(@Param('userid') userid: string) {
-    return `initiate a delete request for user ${userid}`;
+  @HttpCode(201)
+  async delteUserById(@Param('userid') userid: string): Promise<void> {
+    await this.userService.deleteUser(userid);
   }
 }

@@ -23,6 +23,7 @@ export class PostsModule implements NestModule {
       .forRoutes(
         { path: 'posts', method: RequestMethod.POST },
         { path: 'posts', method: RequestMethod.PATCH },
+        { path: 'posts', method: RequestMethod.DELETE },
       );
   }
 }
