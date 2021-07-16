@@ -16,10 +16,10 @@ export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
             },
           }
         : null,
-    dropSchema: true,
+    dropSchema: process.env.NODE_ENV === 'production' ? false : true,
     synchronize: true,
-    logging: true,
-    logger: 'advanced-console',
+    logging: process.env.NODE_ENV === 'production' ? false : true,
+    logger: process.env.NODE_ENV === 'production' ? null : 'advanced-console',
     entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   };
 }
