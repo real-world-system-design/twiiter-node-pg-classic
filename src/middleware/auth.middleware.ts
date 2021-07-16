@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { decode } from 'src/utils/jwt.util';
+import { decode } from '../utils/jwt.util';
 
 export class AuthMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
