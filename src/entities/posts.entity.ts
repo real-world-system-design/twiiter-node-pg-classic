@@ -1,5 +1,6 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Comment } from './comment.entity';
 import { User } from './user.entity';
 
 @Entity('tweets')
@@ -21,4 +22,8 @@ export class Tweet extends BaseEntity {
 
   @ManyToOne(() => User)
   author: User;
+
+  @OneToMany(() => Comment, (comment) => comment.tweet, { eager: true })
+  @JoinColumn()
+  comments: Array<Comment>;
 }
