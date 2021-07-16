@@ -18,11 +18,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get('/@:username')
+  @HttpCode(201)
   getUserByUsername(@Param('username') username: string): string {
     return `details of username ${username}`;
   }
 
   @Get('/:userid')
+  @HttpCode(201)
   getUserById(@Param('userid') userid: string): string {
     return `user by id ${userid}`;
   }

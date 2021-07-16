@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { Tweet } from '../../entities/posts.entity';
 import { User } from '../user/user.decorator';
 import { CommentService } from './comment.service';
@@ -9,6 +9,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post(':tweetId/comment')
+  @HttpCode(201)
   async create(
     @Param('tweetId') tweetId: string,
     @User('email') email: string,

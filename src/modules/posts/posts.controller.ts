@@ -24,17 +24,20 @@ export class PostsController {
     return await this.postService.getAllPosts();
   }
   @Get('/feed')
+  @HttpCode(201)
   getPostsByFeed(@Param('userid') userid: string): string {
     // TODO: user id we can get from jwt token
     return `all feeds of the following users of ${userid}`;
   }
 
   @Get('/:twetid')
+  @HttpCode(201)
   async getPostById(@Param('tweetid') tweetid: string): Promise<Tweet> {
     return await this.postService.getPostById(tweetid);
   }
 
   @Post('/create')
+  @HttpCode(201)
   async createPost(
     @Body() data: TweetData,
     @User('email') email: string,
@@ -44,6 +47,7 @@ export class PostsController {
   }
 
   @Patch('update/:tweetid')
+  @HttpCode(201)
   async updatePostDetails(
     @Param('tweetid') tweetid: string,
     @Body() updateRequest: UpdateTweet,
@@ -54,6 +58,7 @@ export class PostsController {
   }
 
   @Delete('/:postId')
+  @HttpCode(201)
   async deleteTweet(
     @Param('postId') postId: string,
     @User('email') email: string,
