@@ -25,10 +25,10 @@ export class PostsService {
   }
 
   async createTweet(data: TweetData, email: string): Promise<Tweet> {
-    const { title, body, description, tagList } = data;
+    const { text, hashtags } = data;
 
-    const existingTitle = await this.tweetRepo.findOne({ title: title });
-    if (existingTitle)
+    const existingText = await this.tweetRepo.findOne({ text: text });
+    if (existingText)
       throw new HttpException(
         'article with similar title existing',
         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -42,10 +42,8 @@ export class PostsService {
       );
 
     const article = new Tweet();
-    article.title = title;
-    article.body = body;
-    article.description = description;
-    article.tagList = tagList;
+    article.text = text;
+    article.hashtags = hashtags;
     article.author = sanitization(user);
 
     const errors = await validate(article);
@@ -72,12 +70,8 @@ export class PostsService {
     if (!toUpdate)
       throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
 
-    console.log(data.body);
-
-    if (data.body) toUpdate.body = data.body;
-    if (data.title) toUpdate.title = data.title;
-    if (data.description) toUpdate.description = data.description;
-    if (data.tagList) toUpdate.tagList = data.tagList;
+    if (data.text) toUpdate.text = data.text;
+    if (data.hashtags) toUpdate.hashtags = data.hashtags;
 
     return await this.tweetRepo.save(toUpdate);
   }

@@ -1,12 +1,9 @@
 import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class UpdateTweet {
-  readonly title: string;
-
-  readonly body: string;
-
-  readonly description: string;
+  @IsNotEmpty()
+  readonly text: string;
 
   @IsArray()
-  readonly tagList: string[];
+  readonly hashtags: string[];
 }

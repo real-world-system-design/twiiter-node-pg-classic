@@ -5,23 +5,21 @@ import { User } from './user.entity';
 
 @Entity('tweets')
 export class Tweet extends BaseEntity {
-  @Column({ nullable: true })
-  title: string;
+  @Column({ length: 240, nullable: true })
+  text: string;
 
-  @Column({ nullable: true })
-  description: string;
-
-  @Column({ nullable: true })
-  body: string;
-
-  @Column('json', { default: [], nullable: true })
-  tagList: Array<string>;
-
-  @Column({ default: 0 })
-  favoritesCount: number;
+  @Column('json', { default: [] })
+  images?: Array<string>;
 
   @ManyToOne(() => User)
+  @JoinColumn({ name: 'author_id' })
   author: User;
+
+  @Column('json', { default: [], nullable: true })
+  hashtags?: string[];
+
+  @Column({ name: 'like_count', default: 0 })
+  likesCount: number;
 
   @OneToMany(() => Comment, (comment) => comment.tweet, { eager: true })
   @JoinColumn()
