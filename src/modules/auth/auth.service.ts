@@ -10,6 +10,7 @@ import { compare, hash } from 'bcrypt';
 import { SessionsEntity } from '../../entities/session.entity';
 import { Repository } from 'typeorm';
 import { PasswordEntity } from '../../entities/password.entity';
+import { User } from '../../entities/user.entity';
 import { UsersRepository } from '../user/user.repository';
 
 @Injectable()
@@ -58,6 +59,18 @@ export class AuthService {
     session.userId = userPassword.userId;
     const savedSession = await this.sessionRepo.save(session);
     return savedSession;
+  }
+
+  async getUserFromSessionToken(token: string): Promise<User> {
+    const session = await this.sessionRepo.findOne({ where: { id: token } });
+    if (!session) {
+      throw new UnauthorizedException('Session not found');
+    }
+    const user = session.user;
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return user;
   }
 
   private async passToHash(password: string): Promise<string> {

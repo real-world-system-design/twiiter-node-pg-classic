@@ -7,7 +7,7 @@ export class SessionsEntity extends BaseEntity {
   @Column()
   userId: string;
 
-  @OneToOne(() => User)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  @OneToOne(() => User, { lazy: true })
+  user: Promise<User>;
 }

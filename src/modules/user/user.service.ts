@@ -40,4 +40,21 @@ export class UserService {
       return sanitization(newUser);
     }
   }
+
+  async updateUser(
+    userId: string,
+    newUserDetails: Partial<User>,
+  ): Promise<User> {
+    const existingUser = await this.userRepo.findOne({ id: userId });
+    if (!existingUser)
+      throw new HttpException(
+        `${userId} must be unique`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    if (newUserDetails.username)
+      existingUser.username = newUserDetails.username;
+    if (newUserDetails.bio) existingUser.bio = newUserDetails.bio;
+    if (newUserDetails.avatar) existingUser.avatar = newUserDetails.avatar;
+    return await this.userRepo.save(existingUser);
+  }
 }

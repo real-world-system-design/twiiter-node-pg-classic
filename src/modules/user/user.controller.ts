@@ -2,13 +2,17 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
+import { UserPD } from '../auth/auth.decorator';
+import { RequiredAuthGuard } from '../auth/auth.guard';
 import { LoginData } from './dto/loginUser.dto';
 import { createUserDto } from './dto/registerUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
@@ -42,13 +46,18 @@ export class UserController {
     //:TODO: user login logic
   }
 
+  @UseGuards(RequiredAuthGuard)
   @Patch('/:userid')
   @HttpCode(201)
   async updateUserDetails(
+    @UserPD() authdUser: User,
     @Body() data: updateUserDto,
     @Param('userid') userid: string,
   ) {
-    //:TODO: update user details
+    if (authdUser.id !== userid) {
+      throw new ForbiddenException('you can only update your own details');
+    }
+    return await this.userService.updateUser(userid, data);
   }
 
   @Delete('/:userid')
