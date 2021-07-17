@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { Repository } from 'typeorm';
-import { hashPass } from '../../utils/password';
 import { sanitization } from '../../utils/security';
 import { validate } from 'class-validator';
 import { AuthService } from '../auth/auth.service';
@@ -36,10 +35,7 @@ export class UserService {
     } else {
       const newUser = await this.userRepo.save(user);
 
-      await this.authService.createPasswordForNewUser(
-        newUser.id,
-        await hashPass(password),
-      );
+      await this.authService.createPasswordForNewUser(newUser.id, password);
 
       return sanitization(newUser);
     }
