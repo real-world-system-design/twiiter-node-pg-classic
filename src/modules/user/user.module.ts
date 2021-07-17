@@ -9,9 +9,10 @@ import { AuthMiddleware } from '../../middleware/auth.middleware';
 import { User } from '../../entities/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { PasswordEntity } from '../../entities/password.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User, PasswordEntity])],
   controllers: [UserController],
   providers: [UserService],
 })

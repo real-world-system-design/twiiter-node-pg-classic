@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { PasswordEntity } from './password.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -10,14 +11,14 @@ export class User extends BaseEntity {
   username?: string;
   avatar?: string;
 
-  @Column({ nullable: true })
-  password?: string;
-
   @Column({ length: 240, nullable: true })
   bio: string;
 
   @Column('boolean', { default: false })
   verified: boolean;
+
+  @OneToOne(() => PasswordEntity, (password) => password.user, { lazy: true })
+  userPassword: PasswordEntity;
 
   token: string;
 }

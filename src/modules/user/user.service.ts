@@ -1,41 +1,32 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
-import { createUserDto } from './dto/registerUser.dto';
 import { Repository } from 'typeorm';
-import { hashPass, passMatch } from '../../utils/password';
+import { hashPass } from '../../utils/password';
 import { sanitization } from '../../utils/security';
 import { validate } from 'class-validator';
-import { sign } from '../../utils/jwt.util';
-import { LoginData } from './dto/loginUser.dto';
-import { updateUserDto } from './dto/updateUser.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    private authService: AuthService,
   ) {}
-  async registerUser(data: createUserDto): Promise<User> {
-    const { username, password, email } = data;
-
-    //validate the user entered data
-    const existingEmail = await this.userRepo.findOne({ email: email });
-    const existingUser = await this.userRepo.findOne({ username: username });
+  async registerUser(user: Partial<User>, password: string): Promise<User> {
+    const existingEmail = await this.userRepo.findOne({ email: user.email });
+    const existingUser = await this.userRepo.findOne({
+      username: user.username,
+    });
     if (existingEmail && existingUser)
       throw new HttpException(
         {
-          message: `Input data validation failed ${username} and ${email} must be unique`,
+          message: `Input data validation failed ${user.username} and ${user.email} must be unique`,
         },
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
 
-    //save the user to the db
-    const newUSer = new User();
-    newUSer.username = username;
-    newUSer.email = email;
-    newUSer.password = await hashPass(password);
-
-    const errors = await validate(newUSer);
+    const errors = await validate(user);
     if (errors.length > 0) {
       const _errors = { username: 'UserInput is not valid' };
       throw new HttpException(
@@ -43,60 +34,14 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
-      const savedUser = await this.userRepo.save(newUSer);
-      return sanitization(savedUser);
+      const newUser = await this.userRepo.save(user);
+
+      await this.authService.createPasswordForNewUser(
+        newUser.id,
+        await hashPass(password),
+      );
+
+      return sanitization(newUser);
     }
-  }
-  async loginUser(data: LoginData): Promise<User> {
-    const { email, password } = data;
-    const user = await this.userRepo.findOne({ email: email });
-    if (!user)
-      throw new HttpException(
-        { message: `${email} not found` },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-
-    const matchPass = await passMatch(password, user.password);
-    if (!matchPass)
-      throw new HttpException(
-        { message: 'wrong password' },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    user.token = await sign(user);
-    return sanitization(user);
-  }
-
-  async updateUser(data: updateUserDto, userId: string): Promise<User> {
-    const user = await this.userRepo.findOne(userId);
-    if (!user)
-      throw new HttpException(
-        { message: `${data.email} not found` },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-
-    const errors = await validate(data);
-    if (errors.length > 0) {
-      const _errors = { username: 'UserInput is not valid' };
-      throw new HttpException(
-        { message: `Input data validation failed`, _errors },
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      if (data.email) user.email = data.email;
-      if (data.password) user.password = await hashPass(data.password);
-      if (data.username) user.username = data.username;
-      await this.userRepo.save(user);
-      return sanitization(user);
-    }
-  }
-
-  async deleteUser(userId: string): Promise<void> {
-    const user = await this.userRepo.findOne(userId);
-    if (!user)
-      throw new HttpException(
-        { message: 'user not found' },
-        HttpStatus.NOT_FOUND,
-      );
-    await this.userRepo.remove(user);
   }
 }

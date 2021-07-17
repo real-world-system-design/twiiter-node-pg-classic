@@ -1,6 +1,7 @@
 import { User } from '../entities/user.entity';
 
 export function sanitization(user: User) {
-  if (user.password) delete user.password;
+  //:TODO: need triger password sanitization
+  if (user.userPassword) delete user.userPassword;
   return user;
 }

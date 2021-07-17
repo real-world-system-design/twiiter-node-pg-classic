@@ -32,13 +32,14 @@ export class UserController {
   @Post('/register')
   @HttpCode(201)
   async registerNewUser(@Body() data: createUserDto): Promise<User> {
-    return await this.userService.registerUser(data);
+    const user = await this.userService.registerUser(data, data.password);
+    return user;
   }
 
   @Post('login')
   @HttpCode(201)
-  async loginUser(@Body() data: LoginData): Promise<User> {
-    return await this.userService.loginUser(data);
+  async loginUser(@Body() data: LoginData) {
+    //:TODO: user login logic
   }
 
   @Patch('/:userid')
@@ -47,12 +48,12 @@ export class UserController {
     @Body() data: updateUserDto,
     @Param('userid') userid: string,
   ) {
-    return await this.userService.updateUser(data, userid);
+    //:TODO: update user details
   }
 
   @Delete('/:userid')
   @HttpCode(201)
   async delteUserById(@Param('userid') userid: string): Promise<void> {
-    await this.userService.deleteUser(userid);
+    //TODO: delete user
   }
 }

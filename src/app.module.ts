@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { createTypeOrmProdConfig } from './app.dbconfig';
 import { HashtagsModule } from './modules/hashtags/hashtags.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CommentModule } from './modules/comment/comment.module';
     PostsModule,
     HashtagsModule,
     CommentModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
