@@ -21,6 +21,10 @@ export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
     logging: process.env.NODE_ENV === 'production' ? false : true,
     logger: process.env.NODE_ENV === 'production' ? null : 'advanced-console',
     entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+    migrations: [join(__dirname, '**', '*.migration.{ts,js}')],
+    cli: {
+      migrationsDir: 'src/migrations',
+    },
   };
 }
 
