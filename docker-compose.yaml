@@ -38,7 +38,7 @@ services:
       - postgres
 
   redis:
-    image: redis:alpine
+    image: redis:6.2.4
   
   postgres:
     container_name: postgres
@@ -50,3 +50,8 @@ services:
       POSTGRES_USER: twitter
       POSTGRES_PASSWORD: twitter
       POSTGRES_DB: twitter
+    volumes: 
+      - pg_data:/var/lib/postgresql/data
+volumes: 
+  pg_data:
+    driver: local
