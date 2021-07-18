@@ -26,8 +26,10 @@ export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
 
 export function createTypeOrmTestConfig(): TypeOrmModuleOptions {
   return {
-    type: 'sqlite',
-    database: ':memory:',
+    type: 'postgres',
+    database: 'twitter_test',
+    username: 'twiter_test',
+    password: 'password',
     entities: ['src/entities/*.ts'],
     synchronize: true,
     dropSchema: true,
