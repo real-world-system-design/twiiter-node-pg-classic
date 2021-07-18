@@ -1,27 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Tweet } from '../../entities/posts.entity';
-import { Repository } from 'typeorm';
-import { Comment } from '../../entities/comment.entity';
+import { Tweet } from '../entities/posts.entity';
+import { Comment } from '../entities/comment.entity';
 import { createCommentDto } from './dto/createComment.dto';
-import { User } from '../../entities/user.entity';
+import { UsersRepository } from '../user/user.repository';
+import { PostsRepository } from '../posts/posts.repository';
+import { CommentRepository } from './comment.repository';
 
 @Injectable()
 export class CommentService {
   constructor(
-    @InjectRepository(Comment)
-    private readonly commentRO: Repository<Comment>,
-    @InjectRepository(Tweet)
-    private readonly tweetRO: Repository<Tweet>,
-    @InjectRepository(User)
-    private readonly UserRO: Repository<User>,
+    private commentRO: CommentRepository,
+    private tweetRO: PostsRepository,
+    private userRepo: UsersRepository,
   ) {}
   async addComment(
     tweetId: string,
     email: string,
     data: createCommentDto,
   ): Promise<Tweet> {
-    const user = await this.UserRO.findOne({ email: email });
+    const user = await this.userRepo.findOne({ email: email });
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
 
     let tweet = await this.tweetRO.findOne(tweetId);

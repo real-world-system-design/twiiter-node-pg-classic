@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PasswordEntity } from '../../entities/password.entity';
+import { PasswordEntity } from '../entities/password.entity';
 import { SessionsEntity } from 'src/entities/session.entity';
 import { UsersRepository } from '../user/user.repository';
 

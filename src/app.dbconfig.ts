@@ -1,43 +1,25 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { join } from 'path';
+import { Global, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
+import { PasswordEntity } from 'src/entities/password.entity';
+import { Tweet } from './entities/posts.entity';
+import { Comment } from './entities/comment.entity';
+import { SessionsEntity } from './entities/session.entity';
 
-export function createTypeOrmProdConfig(): TypeOrmModuleOptions {
-  return {
-    type: 'postgres',
-    url:
-      process.env.DATABASE_URL ||
-      'postgres://twitter:twitter@localhost:5432/twitter',
-    ssl: process.env.NODE_ENV === 'production' ? true : false,
-    extra:
-      process.env.NODE_ENV === 'production'
-        ? {
-            ssl: {
-              rejectUnauthorized: false,
-            },
-          }
-        : null,
-    dropSchema: process.env.NODE_ENV === 'production' ? false : true,
-    synchronize: true,
-    logging: process.env.NODE_ENV === 'production' ? false : true,
-    logger: process.env.NODE_ENV === 'production' ? null : 'advanced-console',
-    entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-    migrations: [join(__dirname, '**', '*.migration.{ts,js}')],
-    cli: {
-      migrationsDir: 'src/migrations',
-    },
-  };
-}
-
-export function createTypeOrmTestConfig(): TypeOrmModuleOptions {
-  return {
-    type: 'postgres',
-    database: 'twitter_test',
-    username: 'twiter_test',
-    password: 'password',
-    entities: ['src/entities/*.ts'],
-    synchronize: true,
-    dropSchema: true,
-    logging: true,
-    logger: 'advanced-console',
-  };
-}
+@Global()
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      username: 'twitter',
+      password: 'twitter',
+      database: 'twitter',
+      synchronize: true,
+      dropSchema: true,
+      logger: 'advanced-console',
+      logging: 'all',
+      entities: [User, Tweet, Comment, SessionsEntity, PasswordEntity],
+    }),
+  ],
+})
+export class ProdDbModule {}

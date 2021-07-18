@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { User } from '../../entities/user.entity';
+import { User } from '../entities/user.entity';
 import { UserPD } from '../auth/auth.decorator';
 import { RequiredAuthGuard } from '../auth/auth.guard';
 import { LoginData } from './dto/loginUser.dto';
@@ -20,7 +20,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
   @Get('/@:username')
   @HttpCode(201)
   getUserByUsername(@Param('username') username: string): string {

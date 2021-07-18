@@ -1,24 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Tweet } from '../../entities/posts.entity';
+import { Tweet } from '../entities/posts.entity';
 import { TweetData } from './dto/createTweet.dto';
-import { Repository } from 'typeorm';
 import { validate } from 'class-validator';
-import { User } from '../../entities/user.entity';
 import { UpdateTweet } from './dto/updateTweet.dto';
+import { PostsRepository } from './posts.repository';
+import { UsersRepository } from '../user/user.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Tweet) private readonly tweetRepo: Repository<Tweet>,
-    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    private postsRepo: PostsRepository,
+    private userRepo: UsersRepository,
   ) {}
   async getAllPosts(): Promise<Tweet[]> {
-    return await this.tweetRepo.find();
+    return await this.postsRepo.find();
   }
 
   async getPostById(tweetId: string): Promise<Tweet> {
-    const post = await this.tweetRepo.findOne(tweetId);
+    const post = await this.postsRepo.findOne(tweetId);
     if (!post) throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
     return post;
   }
@@ -26,7 +25,7 @@ export class PostsService {
   async createTweet(data: TweetData, email: string): Promise<Tweet> {
     const { text, hashtags } = data;
 
-    const existingText = await this.tweetRepo.findOne({ text: text });
+    const existingText = await this.postsRepo.findOne({ text: text });
     if (existingText)
       throw new HttpException(
         'article with similar title existing',
@@ -50,7 +49,7 @@ export class PostsService {
       const _errors = { error: 'Input data validation failed' };
       throw new HttpException(_errors, HttpStatus.BAD_REQUEST);
     } else {
-      const newArticle = await this.tweetRepo.save(article);
+      const newArticle = await this.postsRepo.save(article);
       return newArticle;
     }
   }
@@ -59,7 +58,7 @@ export class PostsService {
     email: string,
     data: UpdateTweet,
   ): Promise<Tweet> {
-    const toUpdate = await this.tweetRepo.findOne(tweetId);
+    const toUpdate = await this.postsRepo.findOne(tweetId);
     const user = await this.userRepo.findOne({ email: email });
     if (!user)
       throw new HttpException(
@@ -72,15 +71,15 @@ export class PostsService {
     if (data.text) toUpdate.text = data.text;
     if (data.hashtags) toUpdate.hashtags = data.hashtags;
 
-    return await this.tweetRepo.save(toUpdate);
+    return await this.postsRepo.save(toUpdate);
   }
 
   public async deleteTweet(tweetId: string, userId: string): Promise<void> {
-    const tweet = await this.tweetRepo.findOne(tweetId);
+    const tweet = await this.postsRepo.findOne(tweetId);
     const user = await this.userRepo.findOne(userId);
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     if (!tweet)
       throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
-    await this.tweetRepo.remove(tweet);
+    await this.postsRepo.remove(tweet);
   }
 }

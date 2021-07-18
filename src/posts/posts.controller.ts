@@ -8,7 +8,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Tweet } from '../../entities/posts.entity';
+import { Tweet } from '../entities/posts.entity';
 import { User } from '../user/user.decorator';
 import { TweetData } from './dto/createTweet.dto';
 import { UpdateTweet } from './dto/updateTweet.dto';

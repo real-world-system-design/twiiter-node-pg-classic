@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
-import { Tweet } from '../../entities/posts.entity';
+import { Tweet } from '../entities/posts.entity';
 import { User } from '../user/user.decorator';
 import { CommentService } from './comment.service';
 import { createCommentDto } from './dto/createComment.dto';

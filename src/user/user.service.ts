@@ -1,14 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../../entities/user.entity';
-import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 import { validate } from 'class-validator';
 import { AuthService } from '../auth/auth.service';
+import { UsersRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    private userRepo: UsersRepository,
     private authService: AuthService,
   ) {}
   async registerUser(user: Partial<User>, password: string): Promise<User> {

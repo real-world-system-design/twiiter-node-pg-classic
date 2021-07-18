@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
-import { SessionsEntity } from '../../entities/session.entity';
+import { SessionsEntity } from '../entities/session.entity';
 import { Repository } from 'typeorm';
-import { PasswordEntity } from '../../entities/password.entity';
-import { User } from '../../entities/user.entity';
+import { PasswordEntity } from '../entities/password.entity';
+import { User } from '../entities/user.entity';
 import { UsersRepository } from '../user/user.repository';
 
 @Injectable()
