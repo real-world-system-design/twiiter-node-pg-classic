@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import compression from 'fastify-compress';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -11,6 +12,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  app.register(compression, { encodings: ['gzip'] });
   const config = new DocumentBuilder()
     .setTitle('chatter api')
     .setDescription('keep the world connected')
