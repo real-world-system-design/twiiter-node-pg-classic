@@ -27,7 +27,7 @@ export class CommentService {
 
     const comment = new Comment();
     comment.body = data.body;
-    comment.author = user;
+    // comment.author = user;
 
     tweet.comments.push(comment);
 

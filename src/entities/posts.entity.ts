@@ -21,7 +21,7 @@ export class Tweet extends BaseEntity {
   @Column({ name: 'like_count', default: 0 })
   likesCount: number;
 
-  @OneToMany(() => Comment, (comment) => comment.tweet, { eager: true })
+  @OneToMany('Comment', 'tweet')
   @JoinColumn()
   comments: Array<Comment>;
 }

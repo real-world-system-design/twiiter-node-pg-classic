@@ -7,8 +7,8 @@ export class PasswordEntity extends BaseEntity {
   @Column()
   userId: string;
 
+  @JoinColumn({ name: 'userId' })
   @OneToOne(() => User)
-  @JoinColumn()
   user: User;
 
   @Column({ nullable: false })

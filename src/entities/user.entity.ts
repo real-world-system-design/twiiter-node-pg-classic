@@ -17,8 +17,9 @@ export class User extends BaseEntity {
   @Column('boolean', { default: false })
   verified: boolean;
 
-  @OneToOne(() => PasswordEntity, (password) => password.user, { lazy: true })
-  userPassword: PasswordEntity;
-
+  @OneToOne((type) => PasswordEntity, (password) => password.user, {
+    lazy: true,
+    cascade: true,
+  })
   token: string;
 }

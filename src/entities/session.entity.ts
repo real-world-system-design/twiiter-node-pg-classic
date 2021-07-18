@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 
@@ -8,6 +8,6 @@ export class SessionsEntity extends BaseEntity {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @OneToOne(() => User, { lazy: true })
+  @ManyToOne(() => User, { lazy: true })
   user: Promise<User>;
 }

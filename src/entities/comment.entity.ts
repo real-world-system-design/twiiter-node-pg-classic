@@ -8,9 +8,9 @@ export class Comment extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   body?: string;
 
-  @ManyToOne(() => User)
-  author: User;
+  // @ManyToOne('User')
+  // author: User;
 
-  @ManyToOne(() => Tweet, (tweet) => tweet.comments)
-  tweet: Tweet;
+  // @ManyToOne('Tweet', 'comments')
+  // tweet: Tweet;
 }
