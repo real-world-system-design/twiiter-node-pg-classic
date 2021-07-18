@@ -1,6 +1,5 @@
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { Tweet } from '../entities/posts.entity';
-import { User } from '../user/user.decorator';
 import { CommentService } from './comment.service';
 import { createCommentDto } from './dto/createComment.dto';
 
@@ -12,8 +11,8 @@ export class CommentController {
   @HttpCode(201)
   async create(
     @Param('tweetId') tweetId: string,
-    @User('email') email: string,
     @Body() data: createCommentDto,
+    email: string,
   ): Promise<Tweet> {
     return await this.commentService.addComment(tweetId, email, data);
   }
