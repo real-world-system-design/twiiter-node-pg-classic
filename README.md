@@ -14,6 +14,27 @@
 * Redis      -- Cache
 * Heroku     -- Deployment
 
+## Database setup
+
+```$ sudo -i -u postgres```
+
+1. Enter `psql` as admin .
+
+```$ psql```
+
+2. Create database user and grant all privileges
+
+```SQL
+ $create database twitter;
+
+ $create user twitter with encrypted password 'twitter';
+
+ `swith to the newly created db and grant all privileges to the user`
+
+ $grant all privileges on database twitter to twitter;
+
+```
+
 ## Installation
 
 ```bash
