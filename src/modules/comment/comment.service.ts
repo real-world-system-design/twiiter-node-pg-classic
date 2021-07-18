@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { Comment } from '../../entities/comment.entity';
 import { createCommentDto } from './dto/createComment.dto';
 import { User } from '../../entities/user.entity';
-import { sanitization } from '../../utils/security';
 
 @Injectable()
 export class CommentService {
@@ -31,7 +30,7 @@ export class CommentService {
 
     const comment = new Comment();
     comment.body = data.body;
-    comment.author = sanitization(user);
+    comment.author = user;
 
     tweet.comments.push(comment);
 

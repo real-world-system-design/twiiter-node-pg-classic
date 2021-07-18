@@ -5,7 +5,6 @@ import { TweetData } from './dto/createTweet.dto';
 import { Repository } from 'typeorm';
 import { validate } from 'class-validator';
 import { User } from '../../entities/user.entity';
-import { sanitization } from '../../utils/security';
 import { UpdateTweet } from './dto/updateTweet.dto';
 
 @Injectable()
@@ -44,7 +43,7 @@ export class PostsService {
     const article = new Tweet();
     article.text = text;
     article.hashtags = hashtags;
-    article.author = sanitization(user);
+    article.author = user;
 
     const errors = await validate(article);
     if (errors.length > 0) {
