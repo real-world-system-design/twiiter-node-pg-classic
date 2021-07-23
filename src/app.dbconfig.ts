@@ -23,3 +23,21 @@ import { SessionsEntity } from './entities/session.entity';
   ],
 })
 export class ProdDbModule {}
+
+@Global()
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      database: 'test',
+      username: 'test',
+      password: 'test',
+      dropSchema: true,
+      synchronize: true,
+      logging: 'all',
+      logger: 'advanced-console',
+      entities: [User, Tweet, Comment, SessionsEntity, PasswordEntity],
+    }),
+  ],
+})
+export class TestDbModule {}

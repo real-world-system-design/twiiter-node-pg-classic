@@ -21,5 +21,5 @@ export class User extends BaseEntity {
     lazy: true,
     cascade: true,
   })
-  token: string;
+  userPassword: PasswordEntity;
 }
