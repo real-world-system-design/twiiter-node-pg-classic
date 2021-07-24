@@ -1,15 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { validate } from 'class-validator';
 import { AuthService } from '../auth/auth.service';
 import { UsersRepository } from './user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserFollowingEntity } from '../entities/user.following.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepo: UsersRepository,
     private authService: AuthService,
+    @InjectRepository(UserFollowingEntity)
+    private userFollowingRepo: Repository<UserFollowingEntity>,
   ) {}
+  async getUserById(userId: string): Promise<User> {
+    return await this.userRepo.findOne({ where: { id: userId } });
+  }
+
   async registerUser(user: Partial<User>, password: string): Promise<User> {
     const existingEmail = await this.userRepo.findOne({ email: user.email });
     const existingUser = await this.userRepo.findOne({
@@ -54,5 +68,30 @@ export class UserService {
     if (newUserDetails.bio) existingUser.bio = newUserDetails.bio;
     if (newUserDetails.avatar) existingUser.avatar = newUserDetails.avatar;
     return await this.userRepo.save(existingUser);
+  }
+
+  async createUserFollowerRelation(follower: User, followeeId: string) {
+    const followee = await this.getUserById(followeeId);
+    if (!followee) throw new NotFoundException('user not found');
+    const newFollow = await this.userFollowingRepo.save({
+      follower,
+      followee,
+    });
+    return newFollow.followee;
+  }
+
+  async deleteFollowRelation(follower: User, followeeId: string) {
+    const followee = await this.getUserById(followeeId);
+    if (!followee) throw new NotFoundException('user not found');
+    const follow = await this.userFollowingRepo.findOne({
+      where: { follower, followee },
+    });
+    if (follow) {
+      await this.userFollowingRepo.delete(follow.id);
+      //TODO: show user does not follow them anymore
+      return followee;
+    } else {
+      throw new NotFoundException('No follow relationship found');
+    }
   }
 }

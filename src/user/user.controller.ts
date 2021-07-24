@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { User } from '../entities/user.entity';
@@ -58,6 +59,45 @@ export class UserController {
       throw new ForbiddenException('you can only update your own details');
     }
     return await this.userService.updateUser(userid, data);
+  }
+
+  @UseGuards(RequiredAuthGuard)
+  @Put('/:userid/follow')
+  @HttpCode(201)
+  async followUser(
+    @UserPD() follower: User,
+    @Param('userid') followeeId: string,
+  ): Promise<User> {
+    const followedUser = await this.userService.createUserFollowerRelation(
+      follower,
+      followeeId,
+    );
+    return followedUser;
+  }
+
+  @UseGuards(RequiredAuthGuard)
+  @Delete('/:userid/follow')
+  async unfollowUser(
+    @UserPD() follower: User,
+    @Param('userid') followeeId: string,
+  ): Promise<User> {
+    const unfollowedUser = await this.userService.deleteFollowRelation(
+      follower,
+      followeeId,
+    );
+    return unfollowedUser;
+  }
+
+  @UseGuards(RequiredAuthGuard)
+  @Get('/:userid/followers')
+  async getFollowersOfUser(): Promise<User[]> {
+    return [];
+  }
+
+  @UseGuards(RequiredAuthGuard)
+  @Get('/:userid/followees')
+  async getFolloweesOfUser(): Promise<User[]> {
+    return [];
   }
 
   @Delete('/:userid')

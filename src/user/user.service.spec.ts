@@ -4,6 +4,7 @@ import {
   MockPasswordRepositoryProvider,
   MockSessionRepositoryProvider,
   MockUsersRepositoryProvider,
+  MockFollowingRepositoryProvider,
 } from '../commons/mocks/mock.provider';
 import { UserService } from './user.service';
 
@@ -18,6 +19,7 @@ describe('UsersService', () => {
         MockUsersRepositoryProvider,
         MockPasswordRepositoryProvider,
         MockSessionRepositoryProvider,
+        MockFollowingRepositoryProvider,
       ],
     }).compile();
 

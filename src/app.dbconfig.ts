@@ -5,6 +5,7 @@ import { PasswordEntity } from './entities/password.entity';
 import { Tweet } from './entities/posts.entity';
 import { Comment } from './entities/comment.entity';
 import { SessionsEntity } from './entities/session.entity';
+import { UserFollowingEntity } from './entities/user.following.entity';
 
 @Global()
 @Module({
@@ -18,7 +19,14 @@ import { SessionsEntity } from './entities/session.entity';
       dropSchema: true,
       logger: 'advanced-console',
       logging: 'all',
-      entities: [User, Tweet, Comment, SessionsEntity, PasswordEntity],
+      entities: [
+        User,
+        Tweet,
+        Comment,
+        SessionsEntity,
+        UserFollowingEntity,
+        PasswordEntity,
+      ],
     }),
   ],
 })
@@ -36,7 +44,14 @@ export class ProdDbModule {}
       synchronize: true,
       logging: 'all',
       logger: 'advanced-console',
-      entities: [User, Tweet, Comment, SessionsEntity, PasswordEntity],
+      entities: [
+        User,
+        Tweet,
+        Comment,
+        SessionsEntity,
+        UserFollowingEntity,
+        PasswordEntity,
+      ],
     }),
   ],
 })

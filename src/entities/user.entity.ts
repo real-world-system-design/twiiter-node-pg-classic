@@ -17,6 +17,12 @@ export class User extends BaseEntity {
   @Column('boolean', { default: false })
   verified: boolean;
 
+  @Column({ name: 'follower_count', default: 0 })
+  followerCount: number;
+
+  @Column({ name: 'followee_count', default: 0 })
+  followee_count: number;
+
   @OneToOne((type) => PasswordEntity, (password) => password.user, {
     lazy: true,
     cascade: true,
