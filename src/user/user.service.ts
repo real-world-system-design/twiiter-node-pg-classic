@@ -94,4 +94,10 @@ export class UserService {
       throw new NotFoundException('No follow relationship found');
     }
   }
+
+  async deleteUser(userId: string) {
+    const user = await this.getUserById(userId);
+    if (!user) throw new NotFoundException('user not found');
+    await this.userRepo.delete(user.id);
+  }
 }

@@ -8,6 +8,10 @@ export class SessionsEntity extends BaseEntity {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @ManyToOne(() => User, { lazy: true })
+  @ManyToOne(() => User, {
+    lazy: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   user: Promise<User>;
 }

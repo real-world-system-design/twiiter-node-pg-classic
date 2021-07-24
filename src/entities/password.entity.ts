@@ -8,7 +8,7 @@ export class PasswordEntity extends BaseEntity {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   user: User;
 
   @Column({ nullable: false })

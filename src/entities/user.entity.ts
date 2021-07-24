@@ -25,7 +25,6 @@ export class User extends BaseEntity {
 
   @OneToOne((type) => PasswordEntity, (password) => password.user, {
     lazy: true,
-    cascade: true,
   })
   userPassword: PasswordEntity;
 }

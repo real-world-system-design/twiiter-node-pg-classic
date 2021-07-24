@@ -14,7 +14,6 @@ import {
 import { User } from '../entities/user.entity';
 import { UserPD } from '../auth/auth.decorator';
 import { RequiredAuthGuard } from '../auth/auth.guard';
-import { LoginData } from './dto/loginUser.dto';
 import { createUserDto } from './dto/registerUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
@@ -30,8 +29,8 @@ export class UserController {
 
   @Get('/:userid')
   @HttpCode(201)
-  getUserById(@Param('userid') userid: string): string {
-    return `user by id ${userid}`;
+  async getUserById(@Param('userid') userid: string): Promise<User> {
+    return await this.userService.getUserById(userid);
   }
 
   @Post('/register')
@@ -39,12 +38,6 @@ export class UserController {
   async registerNewUser(@Body() data: createUserDto): Promise<User> {
     const user = await this.userService.registerUser(data, data.password);
     return user;
-  }
-
-  @Post('login')
-  @HttpCode(201)
-  async loginUser(@Body() data: LoginData) {
-    //:TODO: user login logic
   }
 
   @UseGuards(RequiredAuthGuard)
@@ -100,9 +93,10 @@ export class UserController {
     return [];
   }
 
+  @UseGuards(RequiredAuthGuard)
   @Delete('/:userid')
   @HttpCode(201)
   async delteUserById(@Param('userid') userid: string): Promise<void> {
-    //TODO: delete user
+    return this.userService.deleteUser(userid);
   }
 }
