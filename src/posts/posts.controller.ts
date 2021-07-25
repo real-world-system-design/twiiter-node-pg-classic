@@ -73,7 +73,7 @@ export class PostsController {
     return `${postId}`;
   }
 
-  @Put('/:postId/like')
+  @Delete('/:postId/like')
   @HttpCode(201)
   async dislikePost(@Param('postId') postId: string): Promise<string> {
     return `${postId}`;

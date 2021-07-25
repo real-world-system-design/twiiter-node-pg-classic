@@ -14,10 +14,25 @@ import {
 import { User } from '../entities/user.entity';
 import { UserPD } from '../auth/auth.decorator';
 import { RequiredAuthGuard } from '../auth/auth.guard';
-import { createUserDto } from './dto/registerUser.dto';
-import { updateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
+import { ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
 
+class UserCreateRequestBody {
+  @ApiProperty() username: string;
+  @ApiProperty() password: string;
+  @ApiPropertyOptional() email: string;
+  @ApiPropertyOptional() avatar?: string;
+  @ApiPropertyOptional() bio?: string;
+}
+
+class UserUpdateRequestBody {
+  @ApiPropertyOptional() password?: string;
+  @ApiPropertyOptional() name?: string;
+  @ApiPropertyOptional() avatar?: string;
+  @ApiPropertyOptional() bio?: string;
+}
+
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -35,7 +50,7 @@ export class UserController {
 
   @Post('/register')
   @HttpCode(201)
-  async registerNewUser(@Body() data: createUserDto): Promise<User> {
+  async registerNewUser(@Body() data: UserCreateRequestBody): Promise<User> {
     const user = await this.userService.registerUser(data, data.password);
     return user;
   }
@@ -45,7 +60,7 @@ export class UserController {
   @HttpCode(201)
   async updateUserDetails(
     @UserPD() authdUser: User,
-    @Body() data: updateUserDto,
+    @Body() data: UserUpdateRequestBody,
     @Param('userid') userid: string,
   ) {
     if (authdUser.id !== userid) {
