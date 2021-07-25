@@ -1,6 +1,26 @@
-import { Controller, Get, HttpCode, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { UserPD } from '../auth/auth.decorator';
+import { RequiredAuthGuard } from '../auth/auth.guard';
+import { User } from '../entities/user.entity';
 import { Tweet } from '../entities/posts.entity';
 import { PostsService } from './posts.service';
+
+class PostCreateRequestBody {
+  text: string;
+  originalPostId: string;
+  replyToPostId: string;
+}
 
 @Controller('posts')
 export class PostsController {
@@ -13,7 +33,7 @@ export class PostsController {
   }
   @Get('/feed')
   @HttpCode(201)
-  getPostsByFeed(@Param('userid') userid: string): string {
+  async getPostsByFeed(@Param('userid') userid: string): Promise<string> {
     // TODO: user id we can get from jwt token
     return `all feeds of the following users of ${userid}`;
   }
@@ -22,5 +42,40 @@ export class PostsController {
   @HttpCode(201)
   async getPostById(@Param('tweetid') tweetid: string): Promise<Tweet> {
     return await this.postService.getPostById(tweetid);
+  }
+
+  @UseGuards(RequiredAuthGuard)
+  @Post('/create')
+  @HttpCode(201)
+  async createPost(
+    @UserPD() author: User,
+    @Body() post: PostCreateRequestBody,
+  ): Promise<Tweet> {
+    const createPost = await this.postService.createPost(post, author);
+    return createPost;
+  }
+
+  @Patch('/:postId')
+  @HttpCode(201)
+  async updatePost(@Param('tweetId') tweetId: string): Promise<string> {
+    return `updated post for ${tweetId}`;
+  }
+
+  @Delete('/:postId')
+  @HttpCode(201)
+  async deletePost(@Param('postId') postId: string): Promise<string> {
+    return `${postId}`;
+  }
+
+  @Put('/:postId/like')
+  @HttpCode(201)
+  async likePost(@Param('postId') postId: string): Promise<string> {
+    return `${postId}`;
+  }
+
+  @Put('/:postId/like')
+  @HttpCode(201)
+  async dislikePost(@Param('postId') postId: string): Promise<string> {
+    return `${postId}`;
   }
 }

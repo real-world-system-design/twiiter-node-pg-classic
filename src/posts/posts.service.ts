@@ -1,10 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Tweet } from '../entities/posts.entity';
-import { TweetData } from './dto/createTweet.dto';
-import { validate } from 'class-validator';
 import { UpdateTweet } from './dto/updateTweet.dto';
 import { PostsRepository } from './posts.repository';
 import { UsersRepository } from '../user/user.repository';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -12,46 +11,28 @@ export class PostsService {
     private postsRepo: PostsRepository,
     private userRepo: UsersRepository,
   ) {}
-  async getAllPosts(): Promise<Tweet[]> {
+  public async getAllPosts(): Promise<Tweet[]> {
     return await this.postsRepo.find();
   }
 
-  async getPostById(tweetId: string): Promise<Tweet> {
+  public async getPostById(tweetId: string): Promise<Tweet> {
     const post = await this.postsRepo.findOne(tweetId);
     if (!post) throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
     return post;
   }
 
-  async createTweet(data: TweetData, email: string): Promise<Tweet> {
-    const { text, hashtags } = data;
-
-    const existingText = await this.postsRepo.findOne({ text: text });
-    if (existingText)
-      throw new HttpException(
-        'article with similar title existing',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-
-    const user = await this.userRepo.findOne({ email: email });
-    if (!user)
-      throw new HttpException(
-        'User with this email not found',
-        HttpStatus.UNAUTHORIZED,
-      );
-
-    const article = new Tweet();
-    article.text = text;
-    article.hashtags = hashtags;
-    article.author = user;
-
-    const errors = await validate(article);
-    if (errors.length > 0) {
-      const _errors = { error: 'Input data validation failed' };
-      throw new HttpException(_errors, HttpStatus.BAD_REQUEST);
-    } else {
-      const newArticle = await this.postsRepo.save(article);
-      return newArticle;
+  public async createPost(post: Partial<Tweet>, author: User): Promise<Tweet> {
+    if (!post.text) {
+      throw new HttpException('post must contain text', HttpStatus.BAD_REQUEST);
     }
+
+    const newPost = new Tweet();
+    newPost.text = post.text;
+    newPost.hashtags = post.hashtags;
+    newPost.author = author;
+
+    const savePost = await this.postsRepo.save(newPost);
+    return savePost;
   }
   public async updateTweet(
     tweetId: string,
