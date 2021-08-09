@@ -16,6 +16,11 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('chatter api')
     .setDescription('keep the world connected')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'Token',
+    })
     .setVersion('1.0.0')
     .addTag('info sharing')
     .build();

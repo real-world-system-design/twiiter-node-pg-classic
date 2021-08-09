@@ -15,13 +15,21 @@ import { RequiredAuthGuard } from '../auth/auth.guard';
 import { User } from '../entities/user.entity';
 import { Tweet } from '../entities/posts.entity';
 import { PostsService } from './posts.service';
+import {
+  ApiBearerAuth,
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiTags,
+} from '@nestjs/swagger';
 
 class PostCreateRequestBody {
-  text: string;
-  originalPostId: string;
-  replyToPostId: string;
+  @ApiProperty() text: string;
+  @ApiProperty() hashtags: string[];
+  @ApiPropertyOptional() originalPostId: string;
+  @ApiPropertyOptional() replyToPostId: string;
 }
 
+@ApiTags('posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
@@ -44,6 +52,7 @@ export class PostsController {
     return await this.postService.getPostById(tweetid);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Post('/create')
   @HttpCode(201)
