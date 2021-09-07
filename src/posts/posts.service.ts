@@ -36,14 +36,17 @@ export class PostsService {
   }
   public async updateTweet(
     tweetId: string,
-    email: string,
-    data: UpdateTweet,
+    userId: User,
+    data: Partial<Tweet>,
   ): Promise<Tweet> {
     const toUpdate = await this.postsRepo.findOne(tweetId);
-    const user = await this.userRepo.findOne({ email: email });
+    console.log(toUpdate);
+    console.log(userId);
+    const user = await this.userRepo.findOne(userId.id);
+    console.log(user);
     if (!user)
       throw new HttpException(
-        'User with this email not found',
+        'User with this id not found',
         HttpStatus.UNAUTHORIZED,
       );
     if (!toUpdate)

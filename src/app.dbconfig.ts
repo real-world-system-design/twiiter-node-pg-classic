@@ -16,7 +16,7 @@ import { UserFollowingEntity } from './entities/user.following.entity';
       password: 'twitter',
       database: 'twitter',
       synchronize: true,
-      dropSchema: true,
+      dropSchema: false,
       logger: 'advanced-console',
       logging: 'all',
       entities: [

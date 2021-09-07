@@ -29,6 +29,11 @@ class PostCreateRequestBody {
   @ApiPropertyOptional() replyToPostId: string;
 }
 
+class UpdatePostRequestBody {
+  @ApiProperty() text: string;
+  @ApiProperty() hashtags: string[];
+}
+
 @ApiTags('posts')
 @Controller('posts')
 export class PostsController {
@@ -64,16 +69,33 @@ export class PostsController {
     return createPost;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RequiredAuthGuard)
   @Patch('/:postId')
   @HttpCode(201)
-  async updatePost(@Param('tweetId') tweetId: string): Promise<string> {
-    return `updated post for ${tweetId}`;
+  async updatePost(
+    @UserPD() author: User,
+    @Param('postId') postId: string,
+    @Body() data: UpdatePostRequestBody,
+  ): Promise<Tweet> {
+    const updatedPost = await this.postService.updateTweet(
+      postId,
+      author,
+      data,
+    );
+    return updatedPost;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RequiredAuthGuard)
   @Delete('/:postId')
   @HttpCode(201)
-  async deletePost(@Param('postId') postId: string): Promise<string> {
-    return `${postId}`;
+  async deletePost(
+    @Param('postId') postId: string,
+    @UserPD() author: User,
+  ): Promise<string> {
+    await this.postService.deleteTweet(postId, author.id);
+    return `post deleted for ${postId}`;
   }
 
   @Put('/:postId/like')
