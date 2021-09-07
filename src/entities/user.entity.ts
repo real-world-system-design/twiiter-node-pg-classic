@@ -11,7 +11,7 @@ export class User extends BaseEntity {
   username?: string;
   avatar?: string;
 
-  @Column({ length: 240, nullable: true })
+  @Column({ length: 240, nullable: true, default: null })
   bio: string;
 
   @Column('boolean', { default: false })

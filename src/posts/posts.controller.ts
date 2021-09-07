@@ -98,15 +98,27 @@ export class PostsController {
     return `post deleted for ${postId}`;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RequiredAuthGuard)
   @Put('/:postId/like')
   @HttpCode(201)
-  async likePost(@Param('postId') postId: string): Promise<string> {
-    return `${postId}`;
+  async likePost(
+    @Param('postId') postId: string,
+    @UserPD() author: User,
+  ): Promise<Tweet> {
+    const likePost = await this.postService.likePost(postId, author.id);
+    return likePost;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(RequiredAuthGuard)
   @Delete('/:postId/like')
   @HttpCode(201)
-  async dislikePost(@Param('postId') postId: string): Promise<string> {
-    return `${postId}`;
+  async dislikePost(
+    @Param('postId') postId: string,
+    @UserPD() author: User,
+  ): Promise<Tweet> {
+    const newPost = await this.postService.dislikePost(postId, author.id);
+    return newPost;
   }
 }

@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Tweet } from '../entities/posts.entity';
-import { UpdateTweet } from './dto/updateTweet.dto';
 import { PostsRepository } from './posts.repository';
 import { UsersRepository } from '../user/user.repository';
 import { User } from 'src/entities/user.entity';
@@ -65,5 +64,25 @@ export class PostsService {
     if (!tweet)
       throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
     await this.postsRepo.remove(tweet);
+  }
+
+  public async likePost(tweetId: string, userId: string): Promise<Tweet> {
+    const tweet = await this.postsRepo.findOne(tweetId);
+    const user = await this.userRepo.findOne(userId);
+    if (!tweet) throw new HttpException('post not found', HttpStatus.NOT_FOUND);
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    tweet.likesCount++;
+    const newPost = await this.postsRepo.save(tweet);
+    return newPost;
+  }
+
+  public async dislikePost(tweetId: string, userId: string): Promise<Tweet> {
+    const tweet = await this.postsRepo.findOne(tweetId);
+    const user = await this.userRepo.findOne(userId);
+    if (!tweet) throw new HttpException('post not found', HttpStatus.NOT_FOUND);
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    tweet.likesCount--;
+    const newPost = await this.postsRepo.save(tweet);
+    return newPost;
   }
 }
