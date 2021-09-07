@@ -15,7 +15,12 @@ import { User } from '../entities/user.entity';
 import { UserPD } from '../auth/auth.decorator';
 import { RequiredAuthGuard } from '../auth/auth.guard';
 import { UserService } from './user.service';
-import { ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiTags,
+} from '@nestjs/swagger';
 
 class UserCreateRequestBody {
   @ApiProperty() username: string;
@@ -55,6 +60,7 @@ export class UserController {
     return user;
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Patch('/:userid')
   @HttpCode(201)
@@ -69,6 +75,7 @@ export class UserController {
     return await this.userService.updateUser(userid, data);
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Put('/:userid/follow')
   @HttpCode(201)
@@ -83,6 +90,7 @@ export class UserController {
     return followedUser;
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Delete('/:userid/follow')
   async unfollowUser(
@@ -96,18 +104,21 @@ export class UserController {
     return unfollowedUser;
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Get('/:userid/followers')
   async getFollowersOfUser(): Promise<User[]> {
     return [];
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Get('/:userid/followees')
   async getFolloweesOfUser(): Promise<User[]> {
     return [];
   }
 
+  @ApiBearerAuth()
   @UseGuards(RequiredAuthGuard)
   @Delete('/:userid')
   @HttpCode(201)
