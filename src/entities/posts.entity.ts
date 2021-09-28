@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Comment } from './comment.entity';
 import { User } from './user.entity';
@@ -21,7 +21,7 @@ export class Tweet extends BaseEntity {
   @Column({ name: 'like_count', default: 0 })
   likesCount: number;
 
-  @OneToMany('Comment', 'tweet')
+  @ManyToMany('Comment', 'tweet')
   @JoinColumn()
   comments: Array<Comment>;
 }

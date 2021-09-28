@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Tweet } from '../entities/posts.entity';
 import { Comment } from '../entities/comment.entity';
-import { createCommentDto } from './dto/createComment.dto';
 import { UsersRepository } from '../user/user.repository';
 import { PostsRepository } from '../posts/posts.repository';
 import { CommentRepository } from './comment.repository';
@@ -15,10 +14,10 @@ export class CommentService {
   ) {}
   async addComment(
     tweetId: string,
-    email: string,
-    data: createCommentDto,
+    userId: string,
+    data: Partial<Comment>,
   ): Promise<Tweet> {
-    const user = await this.userRepo.findOne({ email: email });
+    const user = await this.userRepo.findOne(userId);
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
 
     let tweet = await this.tweetRO.findOne(tweetId);

@@ -1,3 +1,4 @@
+require('dotenv').config()
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -12,11 +13,11 @@ import { UserFollowingEntity } from './entities/user.following.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      username: 'twitter',
-      password: 'twitter',
-      database: 'twitter',
+      username: 'twitter' || process.env.POSTGRES_USER,
+      password: 'twitter' || process.env.POSTGRES_PASSWORD,
+      database: 'twitter' || process.env.POSTGRES_DB,
       synchronize: true,
-      dropSchema: false,
+      dropSchema: true,
       logger: 'advanced-console',
       logging: 'all',
       entities: [
