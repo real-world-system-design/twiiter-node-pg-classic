@@ -35,7 +35,27 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm audit --fix
-      - run: npm run test    
+      - run: npm run test
+  
+  trivy_scan:
+    name: scan for vulnuribility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t  docrahul/triv-demo:v1 .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master   
+        with:
+          image-ref: 'docrahul/triv-demo:v1'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
