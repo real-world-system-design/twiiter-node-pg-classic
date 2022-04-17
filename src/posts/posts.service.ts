@@ -15,7 +15,7 @@ export class PostsService {
   }
 
   public async getPostById(tweetId: string): Promise<Tweet> {
-    const post = await this.postsRepo.findOne(tweetId);
+    const post = await this.postsRepo.findOne({where: {id: tweetId}});
     if (!post) throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
     return post;
   }
@@ -38,10 +38,10 @@ export class PostsService {
     userId: User,
     data: Partial<Tweet>,
   ): Promise<Tweet> {
-    const toUpdate = await this.postsRepo.findOne(tweetId);
+    const toUpdate = await this.postsRepo.findOne({where: {id: tweetId}});
     console.log(toUpdate);
     console.log(userId);
-    const user = await this.userRepo.findOne(userId.id);
+    const user = await this.userRepo.findOne({where: {id: userId.id}});
     console.log(user);
     if (!user)
       throw new HttpException(
@@ -58,8 +58,8 @@ export class PostsService {
   }
 
   public async deleteTweet(tweetId: string, userId: string): Promise<void> {
-    const tweet = await this.postsRepo.findOne(tweetId);
-    const user = await this.userRepo.findOne(userId);
+    const tweet = await this.postsRepo.findOne({where: {id: tweetId}});
+    const user = await this.userRepo.findOne({where: {id: userId}});
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     if (!tweet)
       throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
@@ -67,8 +67,8 @@ export class PostsService {
   }
 
   public async likePost(tweetId: string, userId: string): Promise<Tweet> {
-    const tweet = await this.postsRepo.findOne(tweetId);
-    const user = await this.userRepo.findOne(userId);
+    const tweet = await this.postsRepo.findOne({where: {id: tweetId}});
+    const user = await this.userRepo.findOne({where: {id: userId}});
     if (!tweet) throw new HttpException('post not found', HttpStatus.NOT_FOUND);
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     tweet.likesCount++;
@@ -77,8 +77,8 @@ export class PostsService {
   }
 
   public async dislikePost(tweetId: string, userId: string): Promise<Tweet> {
-    const tweet = await this.postsRepo.findOne(tweetId);
-    const user = await this.userRepo.findOne(userId);
+    const tweet = await this.postsRepo.findOne({where: {id: tweetId}});
+    const user = await this.userRepo.findOne({where: {id: userId}});
     if (!tweet) throw new HttpException('post not found', HttpStatus.NOT_FOUND);
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     tweet.likesCount--;

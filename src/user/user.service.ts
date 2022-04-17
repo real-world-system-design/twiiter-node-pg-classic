@@ -25,10 +25,10 @@ export class UserService {
   }
 
   async registerUser(user: Partial<User>, password: string): Promise<User> {
-    const existingEmail = await this.userRepo.findOne({ email: user.email });
-    const existingUser = await this.userRepo.findOne({
+    const existingEmail = await this.userRepo.findOne({where: {email: user.email}});
+    const existingUser = await this.userRepo.findOne({where: {
       username: user.username,
-    });
+    }});
     if (existingEmail && existingUser)
       throw new HttpException(
         {
@@ -57,7 +57,7 @@ export class UserService {
     userId: string,
     newUserDetails: Partial<User>,
   ): Promise<User> {
-    const existingUser = await this.userRepo.findOne({ id: userId });
+    const existingUser = await this.userRepo.findOne({where:{ id: userId }});
     if (!existingUser)
       throw new HttpException(
         `${userId} must be unique`,

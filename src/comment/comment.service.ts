@@ -17,10 +17,10 @@ export class CommentService {
     userId: string,
     data: Partial<Comment>,
   ): Promise<Tweet> {
-    const user = await this.userRepo.findOne(userId);
+    const user = await this.userRepo.findOne({where: {id: userId}});
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
 
-    let tweet = await this.tweetRO.findOne(tweetId);
+    let tweet = await this.tweetRO.findOne({where: {id: tweetId}});
     if (!tweet)
       throw new HttpException('tweet not found', HttpStatus.NOT_FOUND);
 
