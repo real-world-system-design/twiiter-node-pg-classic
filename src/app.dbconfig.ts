@@ -2,6 +2,7 @@ require('dotenv').config()
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
+import { ConfigModule } from '@nestjs/config'
 import { PasswordEntity } from './entities/password.entity';
 import { Tweet } from './entities/posts.entity';
 import { Comment } from './entities/comment.entity';
@@ -11,8 +12,10 @@ import { UserFollowingEntity } from './entities/user.following.entity';
 @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
+      host: 'postgres',
       username: 'twitter' || process.env.POSTGRES_USER,
       password: 'twitter' || process.env.POSTGRES_PASSWORD,
       database: 'twitter' || process.env.POSTGRES_DB,
@@ -38,6 +41,7 @@ export class ProdDbModule {}
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
+      host: 'postgres',
       database: 'test',
       username: 'test',
       password: 'test',

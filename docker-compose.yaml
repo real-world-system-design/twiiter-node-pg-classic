@@ -6,7 +6,7 @@ services:
       - app1:app1
       - app2:app2
     ports:
-      - "80:80"
+      - "8080:80"
 
   app1:
     container_name: chatter1
