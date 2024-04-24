@@ -34,7 +34,7 @@
     "dotenv": "^16.0.0",
     "fastify-compress": "^4.0.1",
     "fastify-swagger": "^5.1.1",
-    "pg": "^8.7.3",
+    "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
