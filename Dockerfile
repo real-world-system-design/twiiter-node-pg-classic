@@ -27,7 +27,7 @@
 # CMD ["node", "dist/main.js"]
 
 
-FROM node:alpine 
+FROM node:21.2-alpine3.18 
 COPY ./ /opt 
 WORKDIR "/opt" 
 RUN npm cache clean --force && rm -rf node_modules && npm install 
